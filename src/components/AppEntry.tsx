@@ -8,7 +8,7 @@ import {
     Navigate,
     Outlet,
 } from "react-router-dom";
-import MainContainer from "./MainContainer";
+import MainContainer from "./MainContainer/MainContainer";
 import AuthProvider, { useAuth } from "./AuthProvider";
 
 

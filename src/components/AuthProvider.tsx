@@ -1,9 +1,7 @@
 import React, { useCallback } from "react";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../configs/firebaseConfig"
+import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { firebaseInit } from "../store/API/foldersAPI";
 
-const firebaseInit = initializeApp(firebaseConfig);
 const auth = getAuth(firebaseInit);
 
 export let AuthContext = React.createContext<AuthContextType>(null!);
@@ -16,6 +14,7 @@ type UserData = {
 }
 
 interface AuthContextType {
+    uid: string | undefined;
     user: any;
     signin: (newUser: UserData, callback: VoidFunction) => void;
     signout: (callback: VoidFunction) => void;
@@ -35,13 +34,14 @@ const firebaseAuthProvider = {
 
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-    let [user, setUser] = React.useState<UserData>();
-
+    let [user, setUser] = React.useState<UserData | null>();
+    let [uid, setUid]  = React.useState<string>();
     const signin = useCallback((newUser: UserData, callback: VoidFunction) => {
         return firebaseAuthProvider.signIn(() => {
             try{
                 signInWithEmailAndPassword(auth, newUser.email, newUser.pass)
-                .then(() => {
+                .then((res) => {
+                    setUid(res.user?.uid)
                     setUser(newUser);
                     callback();
                 })
@@ -55,13 +55,21 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [])
   
     const signout = useCallback((callback: VoidFunction) => {
-      return firebaseAuthProvider.signOut(() => {
-        setUser({email: "", pass: ""});
+        return firebaseAuthProvider.signOut(() => {
+            try{
+                signOut(auth).then(() => {
+                    setUser(null);
+                }).catch((error) => {
+                    console.error(error)
+                }); 
+            }catch(e){
+                alert(e)
+            }
         callback();
       });
     }, [])
   
-    let value = { user, signin, signout };
+    let value = { uid, user, signin, signout };
   
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
