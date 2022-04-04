@@ -8,9 +8,28 @@ import {
     Navigate,
     Outlet,
 } from "react-router-dom";
+import styled from "styled-components";
 import MainContainer from "./MainContainer/MainContainer";
 import AuthProvider, { useAuth } from "./AuthProvider";
+import { StyledButton } from "../styles/StyledLogin";
+import { StyledP } from "../styles/StyledNotesList";
 
+const StyledAuthContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2em;
+`
+
+const StyledAuthButton = styled(StyledButton)`
+    flex: 0
+`
+const GlobalDiv = styled.div`
+    display: flex;
+    flex-direction: column;
+    border-radius: 2em;
+    background-color: honeydew;
+`
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
     let auth = useAuth();
@@ -25,29 +44,37 @@ const AuthStatus = () => {
     let auth = useAuth();
     let navigate = useNavigate();
     if (!auth.user) {
-        return <p>You are not logged in.</p>;
+        return (
+            <StyledAuthContainer>
+                <StyledP>
+                    You are not logged in.
+                </StyledP>
+            </StyledAuthContainer>
+        );
     }
   
     return (
-        <p>
-            Welcome {auth.user.email}!{" "}
-                <button
+        <StyledAuthContainer>
+            <p>
+                Welcome {auth.user.email}!{" "}
+            </p>
+                <StyledAuthButton
                     onClick={() => {
                         auth.signout(() => navigate("/"));
                     }}
                 >
                     Sign out
-                </button>
-        </p>
+                </StyledAuthButton>
+        </StyledAuthContainer>
     );
 }
   
 const Layout = () => {
     return (
-      <div>
+      <GlobalDiv>
         <AuthStatus />
         <Outlet />
-      </div>
+      </GlobalDiv>
     );
 }
  

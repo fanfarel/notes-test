@@ -65,6 +65,25 @@ export const notesAPI = createApi({
                 return {data: {update: "done update"}};
             },
             invalidatesTags: ["Note"]
+        }),
+        deleteNote: builder.mutation({
+            async queryFn(_arg) {                
+                await set(
+                    ref(
+                        db, 
+                        `/${_arg.uid}/notes/${_arg.folderId}/${_arg.noteId}`
+                    ), 
+                    null
+                )
+                .then((result) => {
+                    return result
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+                return {data: {update: "done delete"}};
+            },
+            invalidatesTags: ["Note"]
         })
     }),
 })
@@ -72,5 +91,6 @@ export const notesAPI = createApi({
 export const { 
     useGetNotesByFolderQuery, 
     useGetNoteByIdQuery, 
-    useSetNoteTextMutation
+    useSetNoteTextMutation,
+    useDeleteNoteMutation
 } = notesAPI;

@@ -1,28 +1,48 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
-export interface FoldersState {
+export interface ActiveInstancesState {
     folderId: string,
-    noteId: string
+    noteId: string,
+    typeOfView: string,
+    fontSize: string,
+    searchString: string
 }
 
-const initialState: FoldersState = {
+const initialState: ActiveInstancesState = {
     folderId: "",
-    noteId: ""
+    noteId: "",
+    typeOfView: "all",
+    fontSize: "",
+    searchString: ""
 }
 
 export const activeInstancesSlice = createSlice({
-    name: 'folders',
+    name: "activeInstances",
     initialState,
     reducers: {
-        setActiveFolder: (state, action: PayloadAction<string>) => {
+        setActiveFolder: (state: ActiveInstancesState, action: PayloadAction<string>) => {
             state.folderId = action.payload
         },
-        setActiveNote: (state, action: PayloadAction<string>) => {
+        setActiveNote: (state: ActiveInstancesState, action: PayloadAction<string>) => {
             state.noteId = action.payload
+        },
+        setTypeOfView: (state: ActiveInstancesState, action: PayloadAction<string>) => {
+            state.typeOfView = action.payload
+        },
+        setFontSize: (state: ActiveInstancesState, action: PayloadAction<string>) => {
+            state.fontSize = action.payload
+        },
+        setSearchString: (state: ActiveInstancesState, action: PayloadAction<string>) => {
+            state.searchString = action.payload
         }
     },
 })
 
-export const { setActiveFolder, setActiveNote } = activeInstancesSlice.actions
+export const { 
+    setActiveFolder, 
+    setActiveNote, 
+    setTypeOfView,
+    setSearchString
+} = activeInstancesSlice.actions
 
 export default activeInstancesSlice.reducer

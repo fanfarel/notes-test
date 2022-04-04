@@ -13,7 +13,8 @@ export const StyledInput = styled.input`
     border-width: 0;
     border-radius: 20px;
     margin: 1em;
-    padding: 10px 20px
+    padding: 10px 20px;
+    background-color: #e3e3e3
 `
 export const StyledButton = styled.button`
     display: flex;
@@ -21,5 +22,7 @@ export const StyledButton = styled.button`
     border-width: 0;
     border-radius: 20px;
     margin: 1em;
-    padding: 10px 20px
+    padding: 10px 20px;
+    justify-content: center;
+    background-color: #e3e3e3;
 `
