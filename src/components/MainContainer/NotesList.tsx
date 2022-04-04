@@ -1,21 +1,43 @@
+import { FC, SyntheticEvent, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { useGetFoldersByUserQuery } from "../../store/API/foldersAPI";
+import { useGetNotesByFolderQuery } from "../../store/API/notesAPI";
+import { elementFromEvent } from "../../utils/utils";
 import { useAuth } from "../AuthProvider";
+import { setActiveNote } from "../../store/slices/activeInstancesSlice";
 
 
 const StyledNotesList = styled.div`
     flex: 1
 `
-const NotesList = () => {
+const NotesList : FC = () => {
     const { uid } = useAuth();
-    const { data, error, isLoading } = useGetFoldersByUserQuery(uid);
-    if(isLoading){
-        return null
+    const { folderId } = useSelector((state: any) => state.activeInstancesReducer);
+    const { data, isLoading } = useGetNotesByFolderQuery({uid: uid, folderId: folderId});
+    const dispatch = useDispatch();
+
+    const handleNoteClick = useCallback((event: SyntheticEvent) => {
+        const element = elementFromEvent(event);
+        dispatch(setActiveNote(element.value));
+    }, [dispatch])
+
+    if(isLoading || !folderId){
+        return null;
     }
-    
+
     return(
         <StyledNotesList>
-            <p>{JSON.stringify({data, error, isLoading})}</p>
+            {Object.keys(data).map(( note, i ) => (
+                <div>
+                    <button
+                        value={data[note].id}
+                        onClick={handleNoteClick}
+                    >
+                        <p>{data[note].title}</p>
+                    </button>
+                </div>
+            ))}
+
         </StyledNotesList>
     )
 }

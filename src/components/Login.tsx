@@ -1,6 +1,6 @@
-import React, {useState, FC, SyntheticEvent, useCallback} from "react";
+import React, { useState, FC, SyntheticEvent, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { validateEmail } from "../utils/utils";
+import { elementFromEvent, validateEmail } from "../utils/utils";
 import { useAuth } from "./AuthProvider";
 import { StyledButton, StyledInput, StyledLogin } from "../styles/StyledLogin";
 
@@ -30,7 +30,7 @@ const Login : FC = () => {
     }, [auth, email, navigate, pass])
     
     const handleInput = useCallback((event: SyntheticEvent) => {
-        const element = event.currentTarget as HTMLInputElement;
+        const element = elementFromEvent(event);
         const value = element.value;
         element.type === "email" ? setEmail(value) : setPass(value);
     }, [])

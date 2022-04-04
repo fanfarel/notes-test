@@ -1,6 +1,9 @@
 import React, { useCallback } from "react";
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { firebaseInit } from "../store/API/foldersAPI";
+import { initializeApp } from "firebase/app";
+import { firebaseConfig } from "../configs/firebaseConfig";
+
+export const firebaseInit = initializeApp(firebaseConfig);
 
 const auth = getAuth(firebaseInit);
 
